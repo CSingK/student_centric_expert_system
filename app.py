@@ -1,3 +1,4 @@
+import base64
 import streamlit as st
 
 from knowledge_base import load_laptops
@@ -7,7 +8,64 @@ from explanation import create_explanation
 from llm_explainer import generate_llm_explanation
 
 
-st.title("Student-Centric Laptop Expert System")
+# Function to encode local images
+def get_base64_of_bin_file(bin_file):
+    with open(bin_file, 'rb') as f:
+        data = f.read()
+    return base64.b64encode(data).decode()
+
+# Encode both images 
+title_img_base64 = get_base64_of_bin_file('title_wave.png')
+
+# Inject the CSS for the banner
+custom_ui_css = f"""
+<style>
+
+/* --- TITLE BANNER STYLING --- */
+.header-banner {{
+    /* The horizontal wave behind the title */
+    background-image: url("data:image/png;base64,{title_img_base64}");
+    background-size: 100% auto; 
+    
+    
+    background-position: center top;
+    
+    background-repeat: no-repeat;
+    
+    /* Padding frames the text over the wave */
+    padding: 20px 20px 60px 20px; 
+    
+    text-align: center;
+    margin-bottom: 30px;
+    margin-top: -30px; 
+    
+    /* creates a soft fade at the bottom of the banner */
+    mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+}}
+
+.glow-text {{
+    font-size: 40px;
+    font-weight: 900;
+    color: #FFFFFF;
+    font-family: 'Arial Black', Impact, sans-serif;
+    text-transform: uppercase;
+    line-height: 1.2;
+    text-shadow: 
+        0 0 4px #00E5FF, 
+        0 0 12px rgba(0, 229, 255, 0.4);
+    margin: 0;
+}}
+
+</style>
+
+<div class="header-banner">
+    <div class="glow-text">Student-Centric Laptop Recommendation Expert System</div>
+</div>
+
+"""
+
+st.markdown(custom_ui_css, unsafe_allow_html=True)
 
 # ----------------------------
 # FEATURES LIST (RANKING)
